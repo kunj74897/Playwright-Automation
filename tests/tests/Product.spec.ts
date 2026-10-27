@@ -78,21 +78,16 @@ test ('Test Case 15: Place Order Before Checkout', async ({page}) => {
 });
 
 
-test ('Test Case 16: Remove Product From Cart', async ({page}) => {
+test('Test Case 16: Remove Product From Cart', async ({ page }) => {
     const product = new Productpage(page);
 
     await product.navigateToWebsite();
     await product.verifyHomePage();
-    await product.clciksignupLogin();
-    await product.loginuser2();
     await product.hoverAndAddToCart();
     await product.cartbutton();
     await product.cartpagevisible();
-    await product.checkoutbutton();
-    await product.discriptionbox();
-    await product.paymentdetails();
-    await product.verifyorderplaced();
-    await product.deleteaccount();
+    await product.removeproduct();
+    await product.verifycartempty();
 });
 
 

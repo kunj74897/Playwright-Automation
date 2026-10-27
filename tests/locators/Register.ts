@@ -161,6 +161,8 @@ export const RegisterLocators = {
     scrollup: "//a[@id='scrollUp']",
     fullfleadge: "//div[@class='item active']//h2[contains(text(),'Full-Fledged practice website for Automation Engin')]",
 
+    smallad:"//div[@class='continue-prompt-text']",
+    bigad: "//div[text()='Close']",
 
 
 

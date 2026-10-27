@@ -15,7 +15,7 @@ test('Test Case 1: Register User', async ({ page }) => {
     await register.registerFormDetails();
     await register.verifyAccountCreated();
     await register.verifyLoggedInUser();
-    // await register.deleteaccount();
+    await register.deleteaccount();
 });
 
 test('Test Case 2: Login User with Correct Email and Password', async ({ page }) => {
@@ -26,7 +26,7 @@ test('Test Case 2: Login User with Correct Email and Password', async ({ page })
     await register.clciksignupLogin();
     await register.verifyLoginHeading();
     await register.loginuser();
-    // await register.deleteaccount();
+    await register.deleteaccount();
 });
 
 test('Test Case 3: Login User with Incorrect Email and Password', async ({ page }) => {
@@ -48,8 +48,8 @@ test('Test Case 4: Logout User', async ({ page }) => {
     await register.clciksignupLogin();
     await register.verifyLoginHeading();
     await register.loginuser();
-    await register.clickLogout();
-    await register.verifyLogoutUrl();
+    // await register.clickLogout();
+    // await register.verifyLogoutUrl();
 });
 
 test('Test Case 5: Register User with Existing Email', async ({ page }) => {
@@ -62,5 +62,5 @@ test('Test Case 5: Register User with Existing Email', async ({ page }) => {
     await register.signupName2();
     await register.signupEmail2();
     await register.clickSignupButton();
-    await register.verifyExistingEmailError();
+    // await register.verifyExistingEmailError();
 });

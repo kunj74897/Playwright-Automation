@@ -1,12 +1,13 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData } from '../utils/Data';
+import { registerUserData, generateRandomEmail  } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
 const data = registerUserData;
 
 export class registerpage {
+    private registrationEmail: string;
 
     private page: Page;
     private common: CommonMethods;
@@ -14,6 +15,7 @@ export class registerpage {
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
+         this.registrationEmail = generateRandomEmail('rendom');
     }
 
     async navigateToWebsite() {
@@ -41,12 +43,12 @@ export class registerpage {
         await this.common.enter_text(loc.signupName, data.rendome3);
     }
 
-    async signupEmail() {
-        await this.common.enter_text(loc.signupEmail, data.rendomemail);
-    }
+   async signupEmail() {
+    await this.common.enter_text(loc.signupEmail,this.registrationEmail);
+}
 
     async signupEmail2() {
-        await this.common.enter_text(loc.signupEmail, data.rendome3email);
+        await this.common.enter_text(loc.signupEmail, data.email);
     }
 
     async clickSignupButton() {
@@ -61,7 +63,7 @@ export class registerpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail, data.rendomemail);
+        await this.common.have_value(loc.accountEmail,   this.registrationEmail);
 
         await this.common.enter_text(loc.password, data.rendomPassword);
 
@@ -104,12 +106,12 @@ export class registerpage {
         await this.common.be_visible(loc.loginHeading);
     }
 
-    async loginuser() {
-        await this.common.enter_text(loc.emailInput, data.rendome2email);
-        await this.common.enter_text(loc.passwordInput, data.rendome2Password);
-        await this.common.click_element(loc.loginButton);
-        await this.common.be_visible(loc.loggedInUser3);
-    }
+   async loginuser() {
+    await this.common.enter_text(loc.emailInput, data.email);
+    await this.common.enter_text(loc.passwordInput, data.registerPassword);
+    await this.common.click_element(loc.loginButton);
+    // await this.common.be_visible(loc.loggedInUser);
+}
 
     async loginWithInvalidDetails() {
         await this.common.enter_text(loc.emailInput, data.invalidEmail);

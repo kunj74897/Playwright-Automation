@@ -1,18 +1,20 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData } from '../utils/Data';
+import { registerUserData, generateRandomEmail } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
 const data = registerUserData;
 
 export class Productpage {
+    private registrationEmail: string;
     private page: Page;
     private common: CommonMethods;
 
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
+        this.registrationEmail = generateRandomEmail('product');
     }
 
     async navigateToWebsite() {
@@ -33,7 +35,7 @@ export class Productpage {
     }
 
     async signupEmail() {
-        await this.common.enter_text(loc.signupEmail, data.rendomemail);
+        await this.common.enter_text(loc.signupEmail, this.registrationEmail);
     }
 
     async clickSignupButton() {
@@ -44,7 +46,7 @@ export class Productpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail, data.rendomemail);
+        await this.common.have_value(loc.accountEmail,  this.registrationEmail);
 
         await this.common.enter_text(loc.password, data.rendomPassword);
 
@@ -140,40 +142,47 @@ export class Productpage {
         await this.common.have_text(loc.totalprice2, data.secondproprice);
     }
 
-    async placeOrder() {
+  async placeOrder() {
 
-        await this.common.hover_element(loc.firstpro);
-        await this.common.click_element(loc.firstaddtocart);
+    await this.common.hover_element(loc.firstpro);
+    await this.common.click_element(loc.firstaddtocart);
 
-        await this.common.click_element(loc.viewcart);
-        await this.common.click_element(loc.checkoutbtn);
-        await this.common.click_element(loc.reglogin);
+    await this.common.click_element(loc.viewcart);
+    await this.common.click_element(loc.checkoutbtn);
+    await this.common.click_element(loc.reglogin);
 
-        await this.common.enter_text(loc.emailInput, data.rendome2email);
-        await this.common.enter_text(loc.passwordInput, data.rendome2Password);
-        await this.common.click_element(loc.loginButton);
+    // Register a new user during checkout
+    await this.signupName();
+    await this.signupEmail();
+    await this.clickSignupButton();
 
-        await this.common.be_visible(loc.loggedInUser3);
+    await this.common.be_visible(loc.enterAccountInformation);
 
-        await this.common.click_element(loc.cartpage);
-        await this.common.click_element(loc.checkoutbtn);
+    await this.registerFormDetails();
+    await this.verifyAccountCreated();
+    await this.verifyLoggedInUser();
 
-        await this.common.enter_text(loc.textbox, data.text);
-        await this.common.click_element(loc.placeorder);
+    // Continue checkout after registration
+    await this.common.click_element(loc.cartpage);
+    await this.common.click_element(loc.checkoutbtn);
 
-        await this.common.enter_text(loc.nameonncard, data.nameOnCard);
-        await this.common.enter_text(loc.cardnumber, data.cardNumber);
-        await this.common.enter_text(loc.CVC, data.cvc);
-        await this.common.enter_text(loc.expmonth, data.expMonth);
-        await this.common.enter_text(loc.expyear, data.expYear);
+    await this.common.enter_text(loc.textbox, data.text);
+    await this.common.click_element(loc.placeorder);
 
-        await this.common.click_element(loc.conformbtn);
-        await this.common.be_visible(loc.conformorder);
+    await this.common.enter_text(loc.nameonncard, data.nameOnCard);
+    await this.common.enter_text(loc.cardnumber, data.cardNumber);
+    await this.common.enter_text(loc.CVC, data.cvc);
+    await this.common.enter_text(loc.expmonth, data.expMonth);
+    await this.common.enter_text(loc.expyear, data.expYear);
 
-        await this.common.click_element(loc.deleteAccount);
-        await this.common.be_visible(loc.accountDeleted);
-        await this.common.click_element(loc.contbtn);
-    }
+    await this.common.click_element(loc.conformbtn);
+    await this.common.be_visible(loc.conformorder);
+
+    // Delete only the newly registered account
+    await this.common.click_element(loc.deleteAccount);
+    await this.common.be_visible(loc.accountDeleted);
+    await this.common.click_element(loc.contbtn);
+}
 
     async hoverAndAddToCart() {
         await this.common.hover_element(loc.firstpro);
@@ -216,6 +225,14 @@ export class Productpage {
         await this.common.be_visible(loc.accountDeleted);
         await this.common.click_element(loc.contbtn);
     }
+
+    async removeproduct() {
+    await this.common.click_element(loc.removeproduct);
+}
+
+async verifycartempty() {
+    await this.common.be_visible(loc.cartempty);
+}
 
     async loginuser2() {
         await this.common.enter_text(loc.emailInput, data.email);

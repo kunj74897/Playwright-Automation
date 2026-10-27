@@ -1,12 +1,13 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData } from '../utils/Data';
+import { registerUserData, generateRandomEmail } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
 const data = registerUserData;
 
 export class Cartpage {
+    private registrationEmail: string
 
     private page: Page;
     private common: CommonMethods;
@@ -14,6 +15,7 @@ export class Cartpage {
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
+        this.registrationEmail = generateRandomEmail('cart');
     }
 
     async navigateToWebsite() {
@@ -34,7 +36,7 @@ export class Cartpage {
     }
 
     async signupEmail() {
-        await this.common.enter_text(loc.signupEmail, data.rendomemail);
+        await this.common.enter_text(loc.signupEmail, this.registrationEmail);
     }
 
     async clickSignupButton() {
@@ -45,7 +47,7 @@ export class Cartpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail, data.rendomemail);
+        await this.common.have_value(loc.accountEmail, this.registrationEmail);
 
         await this.common.enter_text(loc.password, data.rendomPassword);
 
@@ -153,6 +155,7 @@ export class Cartpage {
         await this.common.click_element(loc.deleteAccount);
         await this.common.be_visible(loc.accountDeleted);
         await this.common.click_element(loc.contbtn);
+        // await this.common.closeAdIfVisible();
     }
 
     async removeproduct() {

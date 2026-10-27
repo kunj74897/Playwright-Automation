@@ -57,3 +57,9 @@ export const registerUserData = {
     expYear: '2025'
     
 };
+
+export function generateRandomEmail(prefix: string = 'rendom'): string {
+    return `${prefix}_${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2, 8)}@example.com`;
+}

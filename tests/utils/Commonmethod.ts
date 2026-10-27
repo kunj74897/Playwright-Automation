@@ -70,4 +70,53 @@ export class CommonMethods {
     async have_count(locator: string, expectedCount: number) {
         await expect(this.page.locator(locator)).toHaveCount(expectedCount);
     }
+
+/*     async closeAdIfVisible() {
+    const closeXPath = "//div[@class='continue-prompt-text']";
+
+    const findVisibleClose = async () => {
+        for (const frame of this.page.frames()) {
+            const closeButtons = frame.locator(closeXPath);
+            const count = await closeButtons.count().catch(() => 0);
+
+            for (let i = 0; i < count; i++) {
+                const closeButton = closeButtons.nth(i);
+
+                if (await closeButton.isVisible().catch(() => false)) {
+                    return closeButton;
+                }
+            }
+        }
+
+        return null;
+    };
+
+    // First check whether the Close button is already visible.
+    let closeButton = await findVisibleClose();
+
+    // If it is not visible yet, briefly wait for an ad to appear.
+    if (!closeButton) {
+        const frames = this.page.frames();
+
+        await Promise.all(
+            frames.map(async (frame) => {
+                await frame
+                    .locator(closeXPath)
+                    .first()
+                    .waitFor({
+                        state: 'visible',
+                        timeout: 700
+                    })
+                    .catch(() => {});
+            })
+        );
+
+        closeButton = await findVisibleClose();
+    }
+
+    // Click only if a visible Close button exists.
+    if (closeButton) {
+        await closeButton.click({ timeout: 2000 }).catch(() => {});
+    }
+} */
 }
