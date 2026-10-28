@@ -19,6 +19,7 @@ export class Productpage {
 
     async navigateToWebsite() {
         await this.common.goto_url(data.weburl);
+        
     }
 
     async verifyHomePage() {
@@ -86,14 +87,12 @@ export class Productpage {
     }
 
     async clickproduct() {
-
         await this.common.click_element(loc.product);
         await this.common.closeAdIfVisible();
-        
     }
 
     async allproduct() {
-        
+        await this.common.closeAdIfVisible();
         await this.common.be_visible(loc.allproduct);
     }
 
@@ -116,6 +115,7 @@ export class Productpage {
     async searchproduct() {
         await this.common.enter_text(loc.searchProduct, data.productname);
         await this.common.click_element(loc.searchbtn);
+        await this.common.closeAdIfVisible();
         await this.common.be_visible(loc.searchedproducttitle);
         await this.common.be_visible(loc.searchedproduct);
     }

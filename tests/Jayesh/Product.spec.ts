@@ -26,7 +26,7 @@ test('Test Case 9: Search Product', async ({ page }) => {
     await product.allproduct();
     await product.searchproduct();
 
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(5000);
 
 });
 
@@ -38,7 +38,7 @@ test('Test Case 12: Add Products in Cart', async ({ page }) => {
     await product.verifyHomePage();
     await product.addcart();
 
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(5000);
 
 });
 
@@ -50,7 +50,7 @@ test('Test Case 14: Place Order - Register While Checkout', async ({ page }) => 
     await product.verifyHomePage();
     await product.placeOrder();
 
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(5000);
 
 });
 
