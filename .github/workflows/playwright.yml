@@ -3,20 +3,25 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    branches:
+      - main
+
   workflow_dispatch:
 
 jobs:
   test:
+    name: Run Playwright Tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
@@ -24,10 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
-      - name: Run all Playwright tests
+      - name: Execute all test cases
         run: npx playwright test
 
       - name: Upload Playwright report
@@ -43,7 +48,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: playwright-test-results
           path: test-results/
-          retention-days: 7
+          retention-days: 30
           if-no-files-found: ignore
