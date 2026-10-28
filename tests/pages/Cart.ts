@@ -20,15 +20,19 @@ export class Cartpage {
 
     async navigateToWebsite() {
         await this.common.goto_url(data.weburl);
+        await this.common.closeAdIfVisible();
+
     }
 
     async verifyHomePage() {
+       
         await this.common.have_title('Automation Exercise');
         await this.common.be_visible(loc.home);
     }
 
     async clciksignupLogin() {
         await this.common.click_element(loc.signupLogin);
+        await this.common.closeAdIfVisible();
     }
 
     async signupName() {
@@ -104,8 +108,10 @@ export class Cartpage {
     }
 
     async verifyproQuantity() {
+        
 
         await this.common.click_element(loc.homeviewproduct);
+        await this.common.closeAdIfVisible();
         await this.common.enter_text(loc.inputBox, data.quantity);
 
         await this.common.have_value(loc.inputBox, data.quantity);
@@ -116,13 +122,17 @@ export class Cartpage {
     }
 
     async hoverAndAddToCart() {
+       
         await this.common.hover_element(loc.firstpro);
+         await this.common.closeAdIfVisible();
         await this.common.click_element(loc.firstaddtocart);
         await this.common.click_element(loc.continuebtn);
     }
 
     async cartbutton() {
+        
         await this.common.click_element(loc.cart);
+        await this.common.closeAdIfVisible();
     }
 
     async cartpagevisible() {
@@ -131,6 +141,7 @@ export class Cartpage {
 
     async checkoutbutton() {
         await this.common.click_element(loc.checkoutbtn);
+        await this.common.closeAdIfVisible();
     }
 
     async discriptionbox() {
@@ -153,6 +164,7 @@ export class Cartpage {
 
     async deleteaccount() {
         await this.common.click_element(loc.deleteAccount);
+        await this.common.closeAdIfVisible();
         await this.common.be_visible(loc.accountDeleted);
         await this.common.click_element(loc.contbtn);
         // await this.common.closeAdIfVisible();
@@ -195,6 +207,7 @@ export class Cartpage {
 
     async downloadinvoice() {
         await this.common.click_element(loc.downloadinvoice);
+       
     }
 
 }

@@ -25,10 +25,12 @@ export class Testcasepage {
     }
 
     async clickTestCasesButton() {
+        await this.common.closeAdIfVisible();
         await this.common.click_element(loc.testcase);
     }
 
     async verifyTestCasesPage() {
+        await this.common.closeAdIfVisible();
         await this.common.have_url(data.tCaseUrl);
     }
 }

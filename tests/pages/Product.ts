@@ -86,10 +86,14 @@ export class Productpage {
     }
 
     async clickproduct() {
+
         await this.common.click_element(loc.product);
+        await this.common.closeAdIfVisible();
+        
     }
 
     async allproduct() {
+        
         await this.common.be_visible(loc.allproduct);
     }
 
@@ -117,7 +121,9 @@ export class Productpage {
     }
 
     async addcart() {
+        await this.common.closeAdIfVisible();
         await this.common.click_element(loc.product);
+        await this.common.closeAdIfVisible();
 
         await this.common.hover_element(loc.firstpro);
         await this.common.click_element(loc.firstaddtocart);
@@ -143,6 +149,7 @@ export class Productpage {
     }
 
   async placeOrder() {
+    await this.common.closeAdIfVisible();
 
     await this.common.hover_element(loc.firstpro);
     await this.common.click_element(loc.firstaddtocart);
@@ -165,9 +172,11 @@ export class Productpage {
     // Continue checkout after registration
     await this.common.click_element(loc.cartpage);
     await this.common.click_element(loc.checkoutbtn);
+    await this.common.closeAdIfVisible();
 
     await this.common.enter_text(loc.textbox, data.text);
     await this.common.click_element(loc.placeorder);
+    await this.common.closeAdIfVisible();
 
     await this.common.enter_text(loc.nameonncard, data.nameOnCard);
     await this.common.enter_text(loc.cardnumber, data.cardNumber);
@@ -246,10 +255,12 @@ async verifycartempty() {
     }
 
     async womencategory() {
+        await this.common.closeAdIfVisible();
         await this.common.click_element(loc.womencategory);
     }
 
     async dresscategory() {
+        await this.common.closeAdIfVisible();
         await this.common.click_element(loc.dresscategory);
     }
 

@@ -102,7 +102,7 @@ test('Test case 18: View Category Products', async ({page}) => {
     await product.verifydresscategory();
     await product.mencategory();
 
-    await page.waitForTimeout(2000);
+    // await page.waitForTimeout(2000);
 
 });
 
@@ -119,7 +119,7 @@ test ('Test Case 19: View & Cart Brand Products', async ({page}) => {
     await product.brandname2();
     await product.verifybrandname2();
 
-    await page.waitForTimeout(2000);
+    // await page.waitForTimeout(2000);
 
 });
 
@@ -139,7 +139,7 @@ test('Test Case 20: Search Products and Verify Cart After Login', async ({page})
     await product.cartbutton();
     await product.viewcart2();
 
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(5000);
 
 });
 
@@ -159,6 +159,6 @@ test('Test Case 21: Add review on Product', async ({page}) => {
     await product.cartsubmitbtn();
     await product.reviewmessage();
 
-    await page.waitForTimeout(5000);
+    // await page.waitForTimeout(5000);
 
 });

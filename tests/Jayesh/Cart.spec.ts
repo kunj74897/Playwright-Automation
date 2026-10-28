@@ -80,6 +80,7 @@ test('Test Case 23: Verify address details in checkout page', async ({ page }) =
 });
 
 
+
 test('Test Case 24:Download Invoice after purchase order', async ({ page }) => {
     const cart = new Cartpage(page);
 
@@ -90,7 +91,6 @@ test('Test Case 24:Download Invoice after purchase order', async ({ page }) => {
     await cart.cartpagevisible();
     await cart.checkoutbutton();
     await cart.registerbeforecheckout();
-
     await cart.signupName();
     await cart.signupEmail();
     await cart.clickSignupButton();
