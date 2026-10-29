@@ -160,7 +160,7 @@ test('Test Case 20: Search Products and Verify Cart After Login', async ({ page 
 });
 
 
-test.only('Test Case 21: Add review on Product', async ({page}) => {
+test('Test Case 21: Add review on Product', async ({page}) => {
     const product = new Productpage(page);
 
     await product.navigateToWebsite();
