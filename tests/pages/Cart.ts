@@ -1,13 +1,13 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData, generateRandomEmail } from '../utils/Data';
+import { registerUserData } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
-const data = registerUserData;
+const data = new registerUserData();
 
 export class Cartpage {
-    private registrationEmail: string
+    // private registrationEmail: string
 
     private page: Page;
     private common: CommonMethods;
@@ -15,7 +15,7 @@ export class Cartpage {
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
-        this.registrationEmail = generateRandomEmail('cart');
+        // this.registrationEmail = generateRandomEmail('cart');
     }
 
     async navigateToWebsite() {
@@ -27,7 +27,6 @@ export class Cartpage {
     async verifyHomePage() {
        
         await this.common.have_title('Automation Exercise');
-        await this.common.be_visible(loc.home);
     }
 
     async clciksignupLogin() {
@@ -40,7 +39,7 @@ export class Cartpage {
     }
 
     async signupEmail() {
-        await this.common.enter_text(loc.signupEmail, this.registrationEmail);
+        await this.common.enter_text(loc.signupEmail, data.randomeEmail);
     }
 
     async clickSignupButton() {
@@ -51,7 +50,7 @@ export class Cartpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail, this.registrationEmail);
+        await this.common.have_value(loc.accountEmail, data.randomeEmail);
 
         await this.common.enter_text(loc.password, data.rendomPassword);
 

@@ -73,7 +73,7 @@ export const RegisterLocators = {
     testcase: "//a[text()=' Test Cases']",
 
     product: "//a[text()=' Products']",
-    allproduct: "//h2[text()='All Products']",
+    allproduct: "//h2[@class='title text-center' and text()='All Products']",
     productlist: "//div[@class='features_items']",
     productfirst: "//a[@href='/product_details/1' and text()='View Product']", 
     firstproduct: "//h2[text()='Blue Top']",

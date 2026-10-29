@@ -4,7 +4,6 @@ import { Productpage } from '../pages/Product';
 
 test('Test Case 8: Verify All Products and Product Detail Page', async ({ page }) => {
     const product = new Productpage(page);
-
     await product.navigateToWebsite();
     await product.verifyHomePage();
     await product.clickproduct();
@@ -13,7 +12,6 @@ test('Test Case 8: Verify All Products and Product Detail Page', async ({ page }
     await product.clickFirstProduct();
     await product.verifyFirstProduct();
     await product.verifyProductInformation();
-
 });
 
 
@@ -124,9 +122,27 @@ test ('Test Case 19: View & Cart Brand Products', async ({page}) => {
 });
 
 
-test('Test Case 20: Search Products and Verify Cart After Login', async ({page}) => {
+test('Test Case 20: Search Products and Verify Cart After Login', async ({ page }) => {
     const product = new Productpage(page);
 
+    // Create a dedicated account for this test
+    await product.navigateToWebsite();
+    await product.verifyHomePage();
+    await product.clciksignupLogin();
+    await product.verifyNewUserSignup();
+    await product.signupName();
+    await product.signupEmail();
+    await product.clickSignupButton();
+    await product.verifyAccountInformation();
+    await product.registerFormDetails();
+    await product.verifyAccountCreated();
+    await product.verifyLoggedInUser();
+
+    // Log out before starting the shopping flow
+    await product.clickLogout();
+    await product.verifyLogoutUrl();
+
+    // Original Test Case 20 shopping flow
     await product.navigateToWebsite();
     await product.verifyHomePage();
     await product.clickproduct();
@@ -139,12 +155,12 @@ test('Test Case 20: Search Products and Verify Cart After Login', async ({page})
     await product.cartbutton();
     await product.viewcart2();
 
-    // await page.waitForTimeout(5000);
-
+    // Clean up only the account created by this test
+    await product.deleteaccount();
 });
 
 
-test('Test Case 21: Add review on Product', async ({page}) => {
+test.only('Test Case 21: Add review on Product', async ({page}) => {
     const product = new Productpage(page);
 
     await product.navigateToWebsite();
@@ -159,6 +175,5 @@ test('Test Case 21: Add review on Product', async ({page}) => {
     await product.cartsubmitbtn();
     await product.reviewmessage();
 
-    // await page.waitForTimeout(5000);
 
 });

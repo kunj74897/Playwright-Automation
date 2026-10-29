@@ -4,7 +4,7 @@ import { registerUserData } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
-const data = registerUserData;
+const data = new registerUserData();
 
 export class Testcasepage {
     private page: Page;
@@ -27,10 +27,11 @@ export class Testcasepage {
     async clickTestCasesButton() {
         await this.common.closeAdIfVisible();
         await this.common.click_element(loc.testcase);
+        await this.common.closeAdIfVisible();
+        
     }
 
     async verifyTestCasesPage() {
-        await this.common.closeAdIfVisible();
         await this.common.have_url(data.tCaseUrl);
     }
 }

@@ -4,7 +4,7 @@ import { registerUserData } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
-const data = registerUserData;
+const data = new registerUserData();
 
 export class Homepage {
 

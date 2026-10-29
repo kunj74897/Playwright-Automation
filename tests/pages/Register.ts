@@ -1,13 +1,12 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData, generateRandomEmail  } from '../utils/Data';
+import { registerUserData,  } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
-const data = registerUserData;
+const data = new registerUserData();
 
 export class registerpage {
-    private registrationEmail: string;
 
     private page: Page;
     private common: CommonMethods;
@@ -15,7 +14,6 @@ export class registerpage {
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
-         this.registrationEmail = generateRandomEmail('rendom');
     }
 
     async navigateToWebsite() {
@@ -28,7 +26,7 @@ export class registerpage {
     }
 
     async clciksignupLogin() {
-        await this.common.click_element(loc.signupLogin);
+        await this.common.click_element(loc.signupLogin, 'Signup/Login button');
     }
 
     async verifyNewUserSignup() {
@@ -36,19 +34,24 @@ export class registerpage {
     }
 
     async signupName() {
-        await this.common.enter_text(loc.signupName, data.rendomname);
+        await this.common.enter_text(loc.signupName, data.rendomname, "Name Box");
     }
 
     async signupName2() {
         await this.common.enter_text(loc.signupName, data.rendome3);
     }
 
-   async signupEmail() {
-    await this.common.enter_text(loc.signupEmail,this.registrationEmail);
-}
+    async signupEmail(email?: string) {
+        const randomEmail = email || data.randomeEmail;
+        await this.common.enter_text(loc.signupEmail,randomEmail, "Email Box");
+        return randomEmail; // Return the generated email for later use
+    }
 
     async signupEmail2() {
-        await this.common.enter_text(loc.signupEmail, data.email);
+        await this.common.enter_text(
+            loc.signupEmail,
+            data.rendome2email
+        );
     }
 
     async clickSignupButton() {
@@ -63,9 +66,12 @@ export class registerpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail,   this.registrationEmail);
+        await this.common.have_value(
+            loc.accountEmail,
+            data.randomeEmail
+        );
 
-        await this.common.enter_text(loc.password, data.rendomPassword);
+        await this.common.enter_text(loc.password, data.rendomPassword, "Password Box");
 
         await this.common.select_option(loc.days, data.day);
         await this.common.select_option(loc.months, data.month);
@@ -106,16 +112,22 @@ export class registerpage {
         await this.common.be_visible(loc.loginHeading);
     }
 
-   async loginuser() {
-    await this.common.enter_text(loc.emailInput, data.email);
-    await this.common.enter_text(loc.passwordInput, data.registerPassword);
-    await this.common.click_element(loc.loginButton);
-    // await this.common.be_visible(loc.loggedInUser);
-}
+    async loginuser() {
+        await this.common.enter_text(
+            loc.emailInput,
+            data.randomeEmail
+        );
+        await this.common.enter_text(
+            loc.passwordInput,
+            data.rendomPassword
+        );
+        await this.common.click_element(loc.loginButton);
+        await this.common.be_visible(loc.loggedInUser2);
+    }
 
     async loginWithInvalidDetails() {
-        await this.common.enter_text(loc.emailInput, data.invalidEmail);
-        await this.common.enter_text(loc.passwordInput, data.invalidPassword);
+        await this.common.enter_text(loc.emailInput, data.invalidEmail," Email Box for Invalid Login");
+        await this.common.enter_text(loc.passwordInput, data.invalidPassword, "Password Box for Invalid Login");
         await this.common.click_element(loc.loginButton);
     }
 

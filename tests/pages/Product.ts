@@ -1,20 +1,20 @@
 import { Page, expect } from '@playwright/test';
 import { RegisterLocators } from '../locators/Register';
-import { registerUserData, generateRandomEmail } from '../utils/Data';
+import { registerUserData } from '../utils/Data';
 import { CommonMethods } from '../utils/Commonmethod';
 
 const loc = RegisterLocators;
-const data = registerUserData;
+const data = new registerUserData();
 
 export class Productpage {
-    private registrationEmail: string;
+    // private registrationEmail: string;
     private page: Page;
     private common: CommonMethods;
 
     constructor(page: Page) {
         this.page = page;
         this.common = new CommonMethods(page);
-        this.registrationEmail = generateRandomEmail('product');
+        // this.registrationEmail = data.randomeEmail;
     }
 
     async navigateToWebsite() {
@@ -36,7 +36,7 @@ export class Productpage {
     }
 
     async signupEmail() {
-        await this.common.enter_text(loc.signupEmail, this.registrationEmail);
+        await this.common.enter_text(loc.signupEmail, data.randomeEmail);
     }
 
     async clickSignupButton() {
@@ -47,7 +47,7 @@ export class Productpage {
         await this.common.check_element(loc.titleMr);
 
         await this.common.have_value(loc.accountName, data.rendomname);
-        await this.common.have_value(loc.accountEmail,  this.registrationEmail);
+        await this.common.have_value(loc.accountEmail,  data.randomeEmail);
 
         await this.common.enter_text(loc.password, data.rendomPassword);
 
@@ -88,20 +88,24 @@ export class Productpage {
 
     async clickproduct() {
         await this.common.click_element(loc.product);
-        await this.common.closeAdIfVisible();
+        // await this.common.closeAdIfVisible();
     }
 
     async allproduct() {
+        await this.page.waitForTimeout(2000);
         await this.common.closeAdIfVisible();
         await this.common.be_visible(loc.allproduct);
     }
 
     async verifyProductList() {
+        await this.common.closeAdIfVisible();
         await this.common.be_visible(loc.productlist);
     }
 
     async clickFirstProduct() {
+        await this.common.closeAdIfVisible();
         await this.common.click_element(loc.productfirst);
+        
     }
 
     async verifyFirstProduct() {
@@ -123,7 +127,6 @@ export class Productpage {
     async addcart() {
         await this.common.closeAdIfVisible();
         await this.common.click_element(loc.product);
-        await this.common.closeAdIfVisible();
 
         await this.common.hover_element(loc.firstpro);
         await this.common.click_element(loc.firstaddtocart);
@@ -189,6 +192,7 @@ export class Productpage {
 
     // Delete only the newly registered account
     await this.common.click_element(loc.deleteAccount);
+   
     await this.common.be_visible(loc.accountDeleted);
     await this.common.click_element(loc.contbtn);
 }
@@ -243,12 +247,12 @@ async verifycartempty() {
     await this.common.be_visible(loc.cartempty);
 }
 
-    async loginuser2() {
-        await this.common.enter_text(loc.emailInput, data.email);
-        await this.common.enter_text(loc.passwordInput, data.registerPassword);
-        await this.common.click_element(loc.loginButton);
-        await this.common.be_visible(loc.loggedInUser);
-    }
+   async loginuser2() {
+    await this.common.enter_text(loc.emailInput,data.randomeEmail); 
+    await this.common.enter_text(loc.passwordInput,data.rendomPassword);
+    await this.common.click_element(loc.loginButton);
+    await this.common.be_visible(loc.loggedInUser2);
+}
 
     async viewcategory() {
         await this.common.be_visible(loc.Viewcategory);
@@ -333,4 +337,20 @@ async verifycartempty() {
     async reviewmessage() {
         await this.common.be_visible(loc.reviewmessage);
     }
+
+    async verifyNewUserSignup() {
+    await this.common.be_visible(loc.newUserSignup);
+}
+
+async verifyAccountInformation() {
+    await this.common.be_visible(loc.enterAccountInformation);
+}
+
+async clickLogout() {
+    await this.common.click_element(loc.Logout);
+}
+
+async verifyLogoutUrl() {
+    await this.common.have_url(data.url);
+}
 }
