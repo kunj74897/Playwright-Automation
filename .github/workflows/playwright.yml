@@ -35,6 +35,12 @@ on:
         type: string
         default: ''
 
+      test_case:
+        description: 'Enter test case name (leave empty to run all cases)'
+        required: false
+        type: string
+        default: ''
+
 jobs:
   test:
     name: Run Playwright Tests
@@ -68,6 +74,7 @@ jobs:
         env:
           TEST_TAG: ${{ inputs.tag || 'all' }}
           TEST_FILE: ${{ inputs.test_file }}
+          TEST_CASE: ${{ inputs.test_case }}
         run: |
           args=()
 
@@ -77,6 +84,10 @@ jobs:
 
           if [ "$TEST_TAG" != "all" ]; then
             args+=(--grep "$TEST_TAG")
+          fi
+
+          if [ -n "$TEST_CASE" ]; then
+            args+=(--grep "$TEST_CASE")
           fi
 
           npx playwright test "${args[@]}"
