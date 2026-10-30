@@ -29,6 +29,12 @@ on:
           - '@regression'
           - '@sanity'
 
+      test_file:
+        description: 'Enter test file path (leave empty to run all files)'
+        required: false
+        type: string
+        default: ''
+
 jobs:
   test:
     name: Run Playwright Tests
@@ -61,12 +67,19 @@ jobs:
       - name: Execute Selected Test Cases
         env:
           TEST_TAG: ${{ inputs.tag || 'all' }}
+          TEST_FILE: ${{ inputs.test_file }}
         run: |
-          if [ "$TEST_TAG" = "all" ]; then
-            npx playwright test
-          else
-            npx playwright test --grep "$TEST_TAG"
+          args=()
+
+          if [ -n "$TEST_FILE" ]; then
+            args+=("$TEST_FILE")
           fi
+
+          if [ "$TEST_TAG" != "all" ]; then
+            args+=(--grep "$TEST_TAG")
+          fi
+
+          npx playwright test "${args[@]}"
 
       # Upload Playwright report
       - name: Upload Playwright report
