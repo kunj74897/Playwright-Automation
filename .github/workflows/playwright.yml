@@ -18,6 +18,17 @@ on:
           - main
           - feature
 
+      tag:
+        description: 'Select test tag to execute'
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - '@smoke'
+          - '@regression'
+          - '@sanity'
+
 jobs:
   test:
     name: Run Playwright Tests
@@ -46,9 +57,16 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      # Execute test cases
-      - name: Execute all test cases
-        run: npx playwright test
+      # Execute selected test cases
+      - name: Execute Selected Test Cases
+        env:
+          TEST_TAG: ${{ inputs.tag || 'all' }}
+        run: |
+          if [ "$TEST_TAG" = "all" ]; then
+            npx playwright test
+          else
+            npx playwright test --grep "$TEST_TAG"
+          fi
 
       # Upload Playwright report
       - name: Upload Playwright report
