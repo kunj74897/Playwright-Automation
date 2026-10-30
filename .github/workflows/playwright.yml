@@ -146,7 +146,7 @@ jobs:
 
       # Upload HTML report
       - name: Upload Playwright HTML Report
-        if: ${{ !cancelled() && env.PLAYWRIGHT_REPORT == 'html' }}
+        if: ${{ always() && !cancelled() && env.PLAYWRIGHT_REPORT == 'html' }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-html-report
@@ -156,7 +156,7 @@ jobs:
 
       # Upload JSON report
       - name: Upload Playwright JSON Report
-        if: ${{ !cancelled() && env.PLAYWRIGHT_REPORT == 'json' }}
+        if: ${{ always() && !cancelled() && env.PLAYWRIGHT_REPORT == 'json' }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-json-report
@@ -166,7 +166,7 @@ jobs:
 
       # Upload JUnit report
       - name: Upload Playwright JUnit Report
-        if: ${{ !cancelled() && env.PLAYWRIGHT_REPORT == 'junit' }}
+        if: ${{ always() && !cancelled() && env.PLAYWRIGHT_REPORT == 'junit' }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-junit-report
@@ -176,10 +176,78 @@ jobs:
 
       # Upload test results
       - name: Upload test results
-        if: ${{ !cancelled() }}
+        if: ${{ always() && !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-test-results
           path: test-results/
           retention-days: 30
           if-no-files-found: ignore
+
+      # Prepare selected report for email
+      - name: Prepare Playwright Report for Email
+        id: prepare_report
+        if: ${{ always() && !cancelled() }}
+        shell: bash
+        run: |
+          case "$PLAYWRIGHT_REPORT" in
+            html)
+              if [ -d playwright-report ]; then
+                zip -qr email-report.zip playwright-report/
+              fi
+              ;;
+            json)
+              if [ -f test-results/results.json ]; then
+                zip -q email-report.zip test-results/results.json
+              fi
+              ;;
+            junit)
+              if [ -f test-results/results.xml ]; then
+                zip -q email-report.zip test-results/results.xml
+              fi
+              ;;
+          esac
+
+          if [ -s email-report.zip ]; then
+            echo "report_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "report_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Send report to both email addresses
+      - name: Send Playwright Report via Gmail
+        if: ${{ always() && !cancelled() && steps.prepare_report.outputs.report_exists == 'true' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+
+          from: ${{ secrets.GMAIL_USERNAME }}
+          to: kunj1736@gmail.com,jayesh@qable.io
+
+          subject: Playwright Execution Report - ${{ job.status }}
+
+          body: |
+            Hello,
+
+            Playwright test execution has been completed.
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ inputs.branch }}
+            Browser: ${{ env.PLAYWRIGHT_BROWSER }}
+            Selected Tag: ${{ env.TEST_TAG }}
+            Workers: ${{ env.PLAYWRIGHT_WORKERS }}
+            Retries: ${{ env.PLAYWRIGHT_RETRIES }}
+            Report Format: ${{ env.PLAYWRIGHT_REPORT }}
+            Workflow Status: ${{ job.status }}
+
+            Please find the Playwright execution report attached.
+
+            Regards,
+            Automation Testing Team
+
+          attachments: email-report.zip
