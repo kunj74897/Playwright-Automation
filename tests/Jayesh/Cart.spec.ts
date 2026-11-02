@@ -2,7 +2,8 @@ import { test } from '@playwright/test';
 import { Cartpage } from '../pages/Cart';
 
 
-test('Test Case 11: Verify Subscription in Cart Page', async ({ page }) => {
+
+test('Test Case 11: Verify Subscription in Cart Page @smoke', async ({ page }) => {
     const cart = new Cartpage(page);
 
     await cart.navigateToWebsite();

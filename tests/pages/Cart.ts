@@ -25,7 +25,6 @@ export class Cartpage {
     }
 
     async verifyHomePage() {
-       
         await this.common.have_title('Automation Exercise');
     }
 
@@ -129,7 +128,6 @@ export class Cartpage {
     }
 
     async cartbutton() {
-        
         await this.common.click_element(loc.cart);
         await this.common.closeAdIfVisible();
     }
