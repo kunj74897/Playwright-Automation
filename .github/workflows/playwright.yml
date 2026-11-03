@@ -4,7 +4,7 @@ name: Playwright Tests
 on:
   # Daily execution at 07:00 AM IST
   schedule:
-    - cron: '0 7 * * *'
+    - cron: '25 18 * * *'
       timezone: 'Asia/Kolkata'
 
   # Manual execution
