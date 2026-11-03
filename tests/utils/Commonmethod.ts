@@ -147,7 +147,7 @@ export class CommonMethods {
 
 async closeAdIfVisible() {
     const adFrameXPath =
-        "//iframe[@title='Advertisement' and @id='aswift_3']";
+        "//iframe[@id='aswift_3' and contains(@style,'width: 100vw') and contains(@style,'height: 100vh')]";
 
     for (let i = 0; i < 10; i++) {
         const adFrame = this.page.locator(adFrameXPath);
