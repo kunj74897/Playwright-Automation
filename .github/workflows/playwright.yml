@@ -2,9 +2,9 @@
 name: Playwright Tests
 
 on:
-  # Daily execution at 07:00 AM IST
+  # Daily execution at 06:28 PM IST
   schedule:
-    - cron: '28 18 * * *'
+    - cron: '46 18 * * *'
       timezone: 'Asia/Kolkata'
 
   # Manual execution
@@ -96,6 +96,8 @@ jobs:
       PLAYWRIGHT_WORKERS: ${{ inputs.workers || '1' }}
       PLAYWRIGHT_RETRIES: ${{ inputs.retries || '0' }}
       PLAYWRIGHT_REPORT: ${{ inputs.report || 'html' }}
+
+      EXECUTION_BRANCH: ${{ inputs.branch || 'main' }}
 
     steps:
       # Checkout selected branch
@@ -240,9 +242,12 @@ jobs:
             Playwright test execution has been completed.
 
             Repository: ${{ github.repository }}
-            Branch: main or selected manual branch
+            Branch: ${{ env.EXECUTION_BRANCH }}
+            Trigger: ${{ github.event_name }}
             Browser: ${{ env.PLAYWRIGHT_BROWSER }}
             Selected Tag: ${{ env.TEST_TAG }}
+            Test File: ${{ env.TEST_FILE }}
+            Test Case: ${{ env.TEST_CASE }}
             Workers: ${{ env.PLAYWRIGHT_WORKERS }}
             Retries: ${{ env.PLAYWRIGHT_RETRIES }}
             Report Format: ${{ env.PLAYWRIGHT_REPORT }}
