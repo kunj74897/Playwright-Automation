@@ -38,38 +38,53 @@ pipeline {
                 bat 'npm test'
             }
         }
-
-        stage('Create Playwright Report ZIP') {
-            steps {
-                powershell '''
-                    if (Test-Path "playwright-report") {
-                        if (Test-Path "playwright-report.zip") {
-                            Remove-Item "playwright-report.zip" -Force
-                        }
-
-                        Compress-Archive `
-                            -Path "playwright-report\\*" `
-                            -DestinationPath "playwright-report.zip" `
-                            -Force
-
-                        Write-Host "Playwright report ZIP created successfully!"
-                    }
-                    else {
-                        Write-Error "Playwright report folder not found!"
-                        exit 1
-                    }
-                '''
-            }
-        }
     }
 
     post {
         always {
 
+            echo 'STEP 1: CREATE PLAYWRIGHT REPORT ZIP'
+
+            powershell '''
+                try {
+                    if (Test-Path "playwright-report") {
+
+                        $files = Get-ChildItem "playwright-report" -Force
+
+                        if ($files.Count -gt 0) {
+
+                            if (Test-Path "playwright-report.zip") {
+                                Remove-Item "playwright-report.zip" -Force
+                            }
+
+                            Compress-Archive `
+                                -Path "playwright-report\\*" `
+                                -DestinationPath "playwright-report.zip" `
+                                -Force
+
+                            Write-Host "Playwright report ZIP created successfully!"
+                        }
+                        else {
+                            Write-Warning "Playwright report folder is empty."
+                        }
+                    }
+                    else {
+                        Write-Warning "Playwright report folder not found."
+                    }
+                }
+                catch {
+                    Write-Warning "ZIP creation failed: $_"
+                }
+            '''
+
+            echo 'STEP 2: ARCHIVE REPORTS'
+
             archiveArtifacts(
                 artifacts: 'playwright-report/**,test-results/**,playwright-report.zip',
                 allowEmptyArchive: true
             )
+
+            echo 'STEP 3: PUBLISH HTML REPORT'
 
             publishHTML(target: [
                 reportName: 'Playwright HTML Report',
@@ -79,6 +94,8 @@ pipeline {
                 alwaysLinkToLastBuild: true,
                 allowMissing: true
             ])
+
+            echo 'STEP 4: SEND EMAIL WITH ZIP ATTACHMENT'
 
             emailext(
                 to: 'kunj1736@gmail.com, jayesh@qable.io',
@@ -98,7 +115,7 @@ pipeline {
                     <p><b>Build URL:</b>
                     <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
 
-                    <p>Please find the Playwright HTML report ZIP attached.</p>
+                    <p>Please find the Playwright HTML report ZIP attached, if generated.</p>
 
                     <p>Regards,<br>Automation Testing Team</p>
                 """,
